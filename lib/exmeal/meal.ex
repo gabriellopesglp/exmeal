@@ -7,7 +7,6 @@ defmodule Exmeal.Meal do
 
   @required_params [:description, :date, :calories]
 
-  # Quando chamar o user na view só vai retornar no JSON os items a baixo
   @derive {Jason.Encoder, only: [:id, :descricao, :data, :calorias]}
 
   schema "meals" do
