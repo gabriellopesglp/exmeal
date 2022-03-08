@@ -91,14 +91,14 @@ defmodule Exmeal.MealsControllerTest do
     end
 
     test "when not exist id, return an error", %{conn: conn} do
-      id = "5e694bc0-78fc-4600-bcd0-0733b7540a6e"
+      id = "5e694bc0-78fc-4600-bcd0-0733b7540a6"
 
       response =
         conn
         |> put(Routes.meals_path(conn, :update, id))
-        |> json_response(:not_found)
+        |> json_response(:bad_request)
 
-      assert %{"message" => "Meal not found"} = response
+      assert %{"message" => "Invalid UUID format"} = response
     end
   end
 

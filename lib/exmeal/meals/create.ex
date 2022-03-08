@@ -1,23 +1,12 @@
 defmodule Exmeal.Meals.Create do
-  alias Exmeal.{Error, Repo, Meal}
+  alias Exmeal.{Error, Repo, Meal, DateTimeFormatter}
 
   def call(params) do
     params
-    |> build_datetime()
+    |> DateTimeFormatter.call()
     |> Meal.changeset()
     |> Repo.insert()
     |> handle_insert()
-  end
-
-  defp build_datetime(%{"date" => date} = params) do
-    [dd, mm, yyyy] = String.split(date, "/")
-    {:ok, formatedDate} = Date.from_iso8601("#{yyyy}-#{mm}-#{dd}")
-
-    {:ok, dateTime} = DateTime.new(formatedDate, Time.utc_now(), "Etc/UTC")
-
-    params = Map.replace(params, "date", dateTime)
-
-    params
   end
 
   defp handle_insert({:ok, %Meal{}} = result), do: result
