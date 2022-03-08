@@ -7,31 +7,20 @@ defmodule Exmeal.Meal do
 
   @required_params [:description, :date, :calories]
 
-  @derive {Jason.Encoder, only: [:id, :descricao, :data, :calorias]}
+  @derive {Jason.Encoder, only: [:id, :description, :date, :calories]}
 
   schema "meals" do
     field(:description, :string)
     field(:date, :utc_datetime)
-    field(:calories, :string)
+    field(:calories, :integer)
 
     timestamps()
   end
 
-  def changeset(params) do
-    %__MODULE__{}
-    |> validations(params, @required_params)
-    |> IO.inspect()
-  end
-
-  def changeset(meal, params) do
-    meal
-    |> validations(params, @required_params)
-  end
-
-  defp validations(struct, params, fields) do
+  def changeset(struct \\ %__MODULE__{}, params) do
     struct
-    |> cast(params, fields)
-    |> validate_required(fields)
+    |> cast(params, @required_params)
+    |> validate_required(@required_params)
     |> validate_number(:calories, greater_than: 0)
   end
 end

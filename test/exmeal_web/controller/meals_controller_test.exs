@@ -1,9 +1,11 @@
 defmodule Exmeal.MealsControllerTest do
   use ExmealWeb.ConnCase, async: true
 
+  import Exmeal.Factory
+
   describe "create/2" do
     test "when all params are valid, creates a meal", %{conn: conn} do
-      params = %{description: "Banana", date: "2001-05-02", calories: "20"}
+      params = build(:meal_params)
 
       response =
         conn
@@ -12,23 +14,19 @@ defmodule Exmeal.MealsControllerTest do
 
       assert %{
                "meal" => %{
-                 "meal" => %{
-                   "calories" => 20,
-                   "date" => "2001-05-02",
-                   "description" => "Banana",
-                   "id" => _id
-                 }
+                 "calories" => 20,
+                 "date" => _date,
+                 "description" => "Banana",
+                 "id" => _id
                },
                "message" => "Meal created!"
              } = response
     end
 
     test "when there are invalid params, returns an error", %{conn: conn} do
-      params = %{description: "Banana"}
+      params = build(:meal_params, %{"calories" => 0})
 
-      expected_response = %{
-        "message" => %{"calories" => ["can't be blank"], "date" => ["can't be blank"]}
-      }
+      expected_response = %{"message" => %{"calories" => ["must be greater than 0"]}}
 
       response =
         conn
@@ -41,7 +39,7 @@ defmodule Exmeal.MealsControllerTest do
 
   describe "delete/2" do
     test "when id exist, delete the meal", %{conn: conn} do
-      params = %{description: "Banana", date: "2001-05-02", calories: "20"}
+      params = build(:meal_params)
 
       {:ok, meal} = Exmeal.create_meal(params)
 
@@ -71,7 +69,7 @@ defmodule Exmeal.MealsControllerTest do
 
   describe "update/2" do
     test "when id exist, update the meal", %{conn: conn} do
-      params = %{description: "Banana", date: "2001-05-02", calories: "20"}
+      params = build(:meal_params)
 
       {:ok, meal} = Exmeal.create_meal(params)
 
@@ -85,7 +83,7 @@ defmodule Exmeal.MealsControllerTest do
       assert %{
                "meal" => %{
                  "calories" => 20,
-                 "date" => "2001-05-02",
+                 "date" => _date,
                  "description" => "Banana",
                  "id" => _id
                }
@@ -106,7 +104,7 @@ defmodule Exmeal.MealsControllerTest do
 
   describe "get/2" do
     test "when id exist, return the meal", %{conn: conn} do
-      params = %{description: "Banana", date: "2001-05-02", calories: "20"}
+      params = build(:meal_params)
 
       {:ok, meal} = Exmeal.create_meal(params)
 
@@ -120,7 +118,7 @@ defmodule Exmeal.MealsControllerTest do
       assert %{
                "meal" => %{
                  "calories" => 20,
-                 "date" => "2001-05-02",
+                 "date" => _date,
                  "description" => "Banana",
                  "id" => _id
                }
